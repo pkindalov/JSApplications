@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bus Stop</title>
+    <style>
+        #stopName {
+            font-size: 1.5em;
+            font-weight: 400;
+            padding: 0.25em;
+            background-color: aquamarine;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div id="stopInfo" style="width:20em">
+    <div>
+        <label for="stopId">Stop ID: </label>
+        <input id="stopId" type="text">
+        <input id="submit" type="button" value="Check" onclick="getInfo()"></div>
+    <div id="result">
+        <div id="stopName"></div>
+        <ul id="buses"></ul>
+    </div>
+</div>
+<script>
+    function getInfo() {
+        $('#buses').empty();
+       let stopBus = $('#stopId').val();
+       let host = "https://judgetests.firebaseio.com/businfo/" + stopBus;
+
+
+       $.get(host + ".json")
+           .then(listBuses)
+           .catch(displayError);
+
+
+
+       function listBuses(data) {
+
+//          for(let i = 0; i < buses.length; i++){
+//              console.log(buses[i]);
+//          }
+            $('#stopName').text(data.name);
+
+            for(let obj in data.buses){
+
+                let li = $('<li>');
+              li.text(`Bus ${obj} arrives in ${data.buses[obj]}`);
+              $('#buses').append(li);
+
+            }
+
+
+//              let li = $('<li>');
+//              li.text(b);
+//              $('#buses').append(li);
+
+
+       }
+
+       
+       
+       function displayError() {
+           $('#stopName').text("Error");
+       }
+
+    }
+</script>
+</body>
+</html>
